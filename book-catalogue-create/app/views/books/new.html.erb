@@ -1,0 +1,21 @@
+<%= form_for Book.new do |f| %>
+
+<% flash.each do |name, msg| %>
+  <div>
+    <h3><%= msg %></h3>
+  </div>
+<% end %>
+
+  <%= f.label :title, 'Título' %>
+  <%= f.text_field :title %><br>
+  <%= f.label :author, 'Autora' %>
+  <%= f.text_field :author %><br>  
+  <%= f.label :publication_year, 'Ano de publicação' %>
+  <%= f.text_field :publication_year %><br> 
+  <%= f.label :abstract, 'Resumo' %>
+  <%= f.text_field :abstract %><br>
+  <%= f.label :genre, 'Gênero' %>
+  <%= f.text_field :genre %><br>
+  <%= f.submit 'Enviar' %>
+<% end %>
+  

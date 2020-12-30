@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+
+puts '== Installing dependencies =='
+system 'gem install bundler --conservative'
+system('bundle check') || system('bundle install')
+
+require 'sqlite3'
+
+puts "\n== Preparing database =="
+begin
+  db = SQLite3::Database.open "db/database.db"
+  db.execute <<-SQL
+    CREATE TABLE Pessoas(
+      Nome varchar(255),
+      Idade int,
+      Cidade varchar(255),
+      RG varchar(255)
+    );
+  SQL
+
+  db.execute <<-SQL
+    CREATE TABLE Livros(
+      Titulo varchar(255),
+      Autora varchar(255),
+      Paginas int,
+      Editora varchar(255)
+    );
+  SQL
+
+    [
+      ["Daniel", 36, "Porto Alegre", nil],
+      ["Paula", 28, "Recife", ""],
+      ["Juca", 15, "Recife","22.515.135-3"],
+      ["Joana", 24, "Salvador","66.234.262-4"],
+      ["Ana Carolina", 37, "Salvador", "12.455.616-8"]
+    ].each do |dados|
+      db.execute "INSERT INTO Pessoas VALUES ( ?, ?, ?, ? )", dados
+    end
+
+    [
+      ["Orgulho e preconceito", "Jane Austen", 424, "Cia. Letras"],
+      ["Sejamos todos feministas", "Chimamanda Ngozi Adichie", 64, "Martina"],
+      ["O Diário de Anne Frank", "Anne Frank", 352, "Martina"],
+      ["A Vida Mentirosa dos Adultos", "Elena Ferrante", 432, "Cia. Letras"],
+      ["Quarto de Despejo: Diário de uma Favelada", "Carolina Maria de Jesus", 200, "Fantástica"]
+    ].each do |dados_livro|
+      db.execute "INSERT INTO Livros VALUES ( ?, ?, ?, ? )", dados_livro
+    end
+
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
